@@ -1,3 +1,14 @@
+## Implementation
+
+### Api Authorization
+I created a static API key which should be passed in the header of every request. Saved in `appsettings.Development.json`
+No functionality of this API can be used without the `API key`. Created and registered `ApiAccessMiddleware` to extract the api key from the
+http request and compare it to the api key set in appsettings.
+
+Added to swagger the interface needed to be able to test with authorization.
+
+
+
 # Technical Challenge
 
 ## The problem
@@ -20,5 +31,6 @@ Develop a system that can generate a one-time password for a banking application
 
 ## Evaluation
 Your solution will be evaluated based on coding and testability standards, naming conventions, project structure and the meeting of requirements. It must be uploaded in a public github repository that can be accessed by us for validation.
+
 
  
