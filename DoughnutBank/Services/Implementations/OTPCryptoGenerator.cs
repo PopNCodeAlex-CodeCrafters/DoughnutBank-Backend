@@ -12,18 +12,20 @@ namespace DoughnutBank.Services.Implementations
         {
             try
             {
-                throw new Exception();
-                return (NextInt() % 1000000).ToString("000 000");
+                return ConvertIntToOTPString(GetIntFromCryptoStrongByteSequence());
             }
             catch (Exception)
             {
-                throw new InvalidCastException();
-             //   throw new CustomException("Could not generate OTP", 234); 
+                throw new CustomException("Could not generate OTP", 234); 
             }
-
-           
         }
-        public static int NextInt()
+
+        private static string ConvertIntToOTPString(int intValue)
+        {
+            var OTPstringFormat = "000 000";
+            return (intValue % 1000000).ToString(OTPstringFormat);
+        }
+        public static int GetIntFromCryptoStrongByteSequence()
         {
             crng.Value.GetBytes(bytes.Value);
             return BitConverter.ToInt32(bytes.Value, 0) & int.MaxValue;

@@ -1,3 +1,4 @@
+using DoughnutBank.Authentication.ApiAccess;
 using DoughnutBank.Services.Implementations;
 using DoughnutBank.Services.Interfaces;
 
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IOTPGenerator, OTPCryptoGenerator>();
+builder.Services.AddTransient<ApiAccessMiddleware>();
 
 var app = builder.Build();
 
@@ -21,6 +23,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ApiAccessMiddleware>();
 
 app.UseAuthorization();
 
