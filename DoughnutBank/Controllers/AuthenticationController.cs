@@ -1,3 +1,4 @@
+using DoughnutBank.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoughnutBank.Controllers
@@ -6,14 +7,15 @@ namespace DoughnutBank.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        
-        public AuthenticationController(/*ILogger<WeatherForecastController> logger*/)
+        private readonly IOTPGenerator _otpGenerator;
+        public AuthenticationController(/*ILogger<WeatherForecastController> logger*/ IOTPGenerator otpGenerator)
         {
             //_logger = logger;
+            _otpGenerator = otpGenerator;
         }
 
         [HttpGet("/login")]
-        public void Get()
+        public string Get()
         {
             //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             //{
@@ -22,7 +24,7 @@ namespace DoughnutBank.Controllers
             //    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             //})
             //.ToArray();
-            Console.WriteLine();
+            return _otpGenerator.GenerateOTP();
         }
     }
 }
