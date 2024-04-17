@@ -1,4 +1,6 @@
+using DoughnutBank.Exceptions;
 using DoughnutBank.Services.Interfaces;
+using DoughnutBank.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoughnutBank.Controllers
@@ -8,23 +10,27 @@ namespace DoughnutBank.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IOTPGenerator _otpGenerator;
-        public AuthenticationController(/*ILogger<WeatherForecastController> logger*/ IOTPGenerator otpGenerator)
+        public AuthenticationController(IOTPGenerator otpGenerator)
         {
-            //_logger = logger;
             _otpGenerator = otpGenerator;
         }
 
-        [HttpGet("/login")]
-        public string Get()
+        [HttpGet("/OTP")]
+        public ActionResult<string> GetOTP()
         {
-            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            //{
-            //    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            //    TemperatureC = Random.Shared.Next(-20, 55),
-            //    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            //})
-            //.ToArray();
-            return _otpGenerator.GenerateOTP();
+            try
+            {
+                return Ok(_otpGenerator.GenerateOTP());
+            }
+            catch(CustomException ex)
+            {
+                return StatusCode(ex.ErrorCode, ex.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
