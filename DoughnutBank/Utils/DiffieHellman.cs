@@ -54,6 +54,7 @@ namespace DoughnutBank.Utils
         }
 
 
+        /// TODO This fails with PublicKey from frontend
         private byte[] ComputeDerivedKey(byte[] otherPartyPublicKey)
         {
             var key = CngKey.Import(otherPartyPublicKey, CngKeyBlobFormat.EccPublicBlob);

@@ -1,9 +1,7 @@
 using DoughnutBank.Entities;
 using DoughnutBank.Exceptions;
 using DoughnutBank.Services.Interfaces;
-using DoughnutBank.Utils;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace DoughnutBank.Controllers
 {
@@ -11,19 +9,20 @@ namespace DoughnutBank.Controllers
     [Route("[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IOTPGenerator _otpGenerator;
-        public AuthenticationController(IOTPGenerator otpGenerator)
+        private readonly IAuthenticationService _authenticationService;
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
-            _otpGenerator = otpGenerator;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost("/login")]
-        public async Task<ActionResult<string>> LoginUser([FromBody] User user)
+        public async Task<ActionResult<User>> LoginUser([FromBody] User user)
         {
             try
             {
-                Console.WriteLine("The email: " + user.Email + ", the password: " + user.Password);
-                    return Ok();
+                var userFromDatabase = await _authenticationService.LoginUser(user);
+
+                return Ok(userFromDatabase);
             }
             catch (CustomException ex)
             {
@@ -41,8 +40,8 @@ namespace DoughnutBank.Controllers
         {
             try
             {
-                Console.WriteLine("The email: " + user.Email + ", the password: " + user.Password);
-                return Ok();
+                var jwt = await _authenticationService.RegisterUser(user);
+                return Ok(jwt);
             }
             catch (CustomException ex)
             {
@@ -55,22 +54,6 @@ namespace DoughnutBank.Controllers
             }
         }
 
-        [HttpGet("/OTP")]
-        public ActionResult<string> GetOTP()
-        {
-            try
-            {
-                return Ok(new { otp = _otpGenerator.GenerateOTP() });
-            }
-            catch(CustomException ex)
-            {
-                return StatusCode(ex.ErrorCode, ex.Message);
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
     }
 }

@@ -1,8 +1,13 @@
 using DoughnutBank.Authentication.ApiAccess;
+using DoughnutBank.Entities.DBContext;
 using DoughnutBank.Services.Implementations;
 using DoughnutBank.Services.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using DoughnutBank.Repositories.Interfaces;
+using DoughnutBank.Repositories.Implementations;
+using DoughnutBank.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "Allow Frontend";
@@ -54,8 +59,19 @@ void addAuthButtonForSwaggerThroughOptions(SwaggerGenOptions options)
     options.AddSecurityRequirement(requirement);
 }
 
-builder.Services.AddSingleton<IOTPGenerator, OTPCryptoGenerator>();
+
+builder.Services.AddDbContext<DoughnutBankContext>(options =>
+{
+    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
+builder.Services.AddScoped<IOTPGenerator, OTPCryptoGenerator>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<OTPService>();
 builder.Services.AddTransient<ApiAccessMiddleware>();
+builder.Services.AddScoped<AuthorizationFilter>();
 
 var app = builder.Build();
 

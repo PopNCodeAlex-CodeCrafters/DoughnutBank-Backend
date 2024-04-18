@@ -6,8 +6,9 @@ namespace DoughnutBank.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        public Task<string> LoginUser(User user);
+        public Task<User> LoginUser(User user);
 
         public Task<string> RegisterUser(User user);
+
     }
 }
