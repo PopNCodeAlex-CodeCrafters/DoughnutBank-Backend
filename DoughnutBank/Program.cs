@@ -70,8 +70,10 @@ builder.Services.AddScoped<IOTPGenerator, OTPCryptoGenerator>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<OTPService>();
+builder.Services.AddScoped<OTPRepository>();
 builder.Services.AddTransient<ApiAccessMiddleware>();
 builder.Services.AddScoped<AuthorizationFilter>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
