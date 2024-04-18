@@ -1,6 +1,13 @@
-﻿namespace DoughnutBank.Services.Interfaces
+﻿using DoughnutBank.Entities;
+using DoughnutBank.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DoughnutBank.Services.Interfaces
 {
-    public interface IUserService
+    public interface IAuthenticationService
     {
+        public Task<string> LoginUser(User user);
+
+        public Task<string> RegisterUser(User user);
     }
 }

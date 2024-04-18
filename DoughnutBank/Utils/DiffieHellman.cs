@@ -49,7 +49,7 @@ namespace DoughnutBank.Utils
             SetAesKey(derivedKey);
             SetAesIV(iv);
 
-            string decryptedMessage = CryptedMessageToDecryptedStringUsingAes(encryptedMessage);
+            var decryptedMessage = CryptedMessageToDecryptedStringUsingAes(encryptedMessage);
             return decryptedMessage;
         }
 
@@ -69,35 +69,36 @@ namespace DoughnutBank.Utils
         {
             aes.IV = iv;
         }
-
+       
         private byte[] MessageToEncryptedByteArrayUsingAes(string message)
         {
-            using var cipherText = new MemoryStream();
+            byte[] encryptedMessage;
 
-            using var encryptor = aes.CreateEncryptor();
+            using var encryptedMessageStream = new MemoryStream();
+            
+            using var encryptor = this.aes.CreateEncryptor();
+                
+            using var cryptoStream = new CryptoStream(encryptedMessageStream, encryptor, CryptoStreamMode.Write);
+                    
+            using (StreamWriter sw = new StreamWriter(cryptoStream))
+             sw.Write(message);
 
-            using var cryptoStream = new CryptoStream(cipherText, encryptor, CryptoStreamMode.Write);
-                    
-            byte[] ciphertextMessage = Encoding.UTF8.GetBytes(message);
-            cryptoStream.Write(ciphertextMessage, 0, ciphertextMessage.Length);
-                    
-            return cipherText.ToArray();
+            encryptedMessage = encryptedMessageStream.ToArray();
+            return encryptedMessage;
         }
 
         private string CryptedMessageToDecryptedStringUsingAes(byte[] encryptedMessage)
         {
-            using var plainText = new MemoryStream();
+            using var encryptedMessageStream = new MemoryStream(encryptedMessage);
 
             using var decryptor = this.aes.CreateDecryptor();
 
-            using var cryptoStream = new CryptoStream(plainText, decryptor, CryptoStreamMode.Write);
-                    
-            cryptoStream.Write(encryptedMessage, 0, encryptedMessage.Length);
+            using var cryptoStream = new CryptoStream(encryptedMessageStream, decryptor, CryptoStreamMode.Read);
 
-            return Encoding.UTF8.GetString(plainText.ToArray());    
+            using StreamReader reader = new StreamReader(cryptoStream);
+
+            string plainText = reader.ReadToEnd();
+            return plainText;
         }
-
-
-
     }
 }

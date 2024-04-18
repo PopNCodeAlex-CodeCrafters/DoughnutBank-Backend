@@ -1,6 +1,18 @@
-﻿namespace DoughnutBank.Services.Implementations
+﻿using DoughnutBank.Entities;
+using DoughnutBank.Services.Interfaces;
+
+namespace DoughnutBank.Services.Implementations
 {
-    public class UserService
+    public class AuthenticationService : IAuthenticationService
     {
+        public Task<string> LoginUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> RegisterUser(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

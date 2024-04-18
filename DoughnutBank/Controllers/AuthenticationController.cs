@@ -18,12 +18,31 @@ namespace DoughnutBank.Controllers
         }
 
         [HttpPost("/login")]
-        public ActionResult<string> LoginUser([FromBody] User user)
+        public async Task<ActionResult<string>> LoginUser([FromBody] User user)
         {
             try
             {
                 Console.WriteLine("The email: " + user.Email + ", the password: " + user.Password);
                     return Ok();
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.ErrorCode, ex.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("/signup")]
+        public async Task<ActionResult<string>> RegisterUser([FromBody] User user)
+        {
+            try
+            {
+                Console.WriteLine("The email: " + user.Email + ", the password: " + user.Password);
+                return Ok();
             }
             catch (CustomException ex)
             {

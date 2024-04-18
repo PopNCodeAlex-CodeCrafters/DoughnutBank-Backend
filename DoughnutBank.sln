@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoughnutBank.Tests", "DoughnutBank.Tests\DoughnutBank.Tests.csproj", "{0454AE56-F25E-47B4-82CB-4F410646D29F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6BEEA72A-73B9-453D-916C-89A3304CEFDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BEEA72A-73B9-453D-916C-89A3304CEFDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BEEA72A-73B9-453D-916C-89A3304CEFDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0454AE56-F25E-47B4-82CB-4F410646D29F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0454AE56-F25E-47B4-82CB-4F410646D29F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0454AE56-F25E-47B4-82CB-4F410646D29F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0454AE56-F25E-47B4-82CB-4F410646D29F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
