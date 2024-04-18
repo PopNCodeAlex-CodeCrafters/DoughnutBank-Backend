@@ -1,3 +1,4 @@
+using DoughnutBank.Entities;
 using DoughnutBank.Exceptions;
 using DoughnutBank.Services.Interfaces;
 using DoughnutBank.Utils;
@@ -17,11 +18,11 @@ namespace DoughnutBank.Controllers
         }
 
         [HttpPost("/login")]
-        public ActionResult<string> LoginUser([FromBody] string email, [FromBody] string password)
+        public ActionResult<string> LoginUser([FromBody] User user)
         {
             try
             {
-                Console.WriteLine("The email: " + email + ", the password: " + password);
+                Console.WriteLine("The email: " + user.Email + ", the password: " + user.Password);
                     return Ok();
             }
             catch (CustomException ex)
