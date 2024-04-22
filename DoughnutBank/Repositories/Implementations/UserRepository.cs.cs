@@ -15,7 +15,7 @@ namespace DoughnutBank.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<User> LoginUser(User user)
+        public async Task<User> LoginUserAsync(User user)
         {
             try
             {
@@ -32,13 +32,12 @@ namespace DoughnutBank.Repositories.Implementations
             }
         }
 
-        public async Task RegisterUser(User user)
+        public async Task RegisterUserAsync(User user)
         {
             try
             {
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
-                //return user;
             }
             catch (Exception ex)
             {
@@ -47,7 +46,7 @@ namespace DoughnutBank.Repositories.Implementations
             }
         }
 
-        public async Task<bool> UserExists(User user)
+        public async Task<bool> UserExistsAsync(User user)
         {
             try
             {

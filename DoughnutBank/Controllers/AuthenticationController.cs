@@ -16,11 +16,11 @@ namespace DoughnutBank.Controllers
         }
 
         [HttpPost("/login")]
-        public async Task<ActionResult<User>> LoginUser([FromBody] User user)
+        public async Task<ActionResult<User>> LoginUserAsync([FromBody] User user)
         {
             try
             {
-                var userFromDatabase = await _authenticationService.LoginUser(user);
+                var userFromDatabase = await _authenticationService.LoginUserAsync(user);
 
                 return Ok(userFromDatabase);
             }
@@ -36,11 +36,11 @@ namespace DoughnutBank.Controllers
         }
 
         [HttpPost("/signup")]
-        public async Task<ActionResult<string>> RegisterUser([FromBody] User user)
+        public async Task<ActionResult<string>> RegisterUserAsync([FromBody] User user)
         {
             try
             {
-                var jwt = await _authenticationService.RegisterUser(user);
+                var jwt = await _authenticationService.RegisterUserAsync(user);
                 return Ok(jwt);
             }
             catch (CustomException ex)

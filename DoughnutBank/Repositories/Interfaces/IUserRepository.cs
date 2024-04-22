@@ -5,8 +5,8 @@ namespace DoughnutBank.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        public Task RegisterUser(User user);
-        public Task<User> LoginUser(User user);
-        public Task<bool> UserExists(User user);
+        public Task RegisterUserAsync(User user);
+        public Task<User> LoginUserAsync(User user);
+        public Task<bool> UserExistsAsync(User user);
     }
 }

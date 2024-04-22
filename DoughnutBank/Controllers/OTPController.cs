@@ -24,11 +24,11 @@ namespace DoughnutBank.Controllers
 
 
         [HttpPost("/OTP")]
-        public async Task<ActionResult<EncryptedOTP>> GetOTP([FromBody] EncryptedOTP partialOtp)
+        public async Task<ActionResult<EncryptedOTP>> GetOTPAsync([FromBody] EncryptedOTP partialOtp)
         {
             try
             {
-                var encryptedOtp = await _otpService.ComputeEncryptedOTP(partialOtp);
+                var encryptedOtp = await _otpService.ComputeEncryptedOTPAsync(partialOtp);
                 return Ok(encryptedOtp);
             }
             catch(CustomException ex)
@@ -43,11 +43,11 @@ namespace DoughnutBank.Controllers
         }
 
         [HttpPost("/checkOTP")]
-        public async Task<ActionResult> CheckOTP([FromBody] User user)
+        public async Task<ActionResult> CheckOTPAsync([FromBody] User user)
         {
             try
             {
-                await _otpService.checkOTP(user);
+                await _otpService.CheckOTP(user);
                 return Ok();
             }
             catch (CustomException ex)

@@ -16,7 +16,7 @@ namespace DoughnutBank.Services.Implementations
             }
             catch (Exception)
             {
-                throw new CustomException("Could not generate OTP", 234); 
+                throw new CustomException("Could not generate OTP", 500); 
             }
         }
 

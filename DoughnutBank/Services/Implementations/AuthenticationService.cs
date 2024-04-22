@@ -11,18 +11,18 @@ namespace DoughnutBank.Services.Implementations
         public AuthenticationService(IUserRepository userRepository) {
             _userRepository = userRepository;
         }
-        public async Task<User> LoginUser(User user)
+        public async Task<User> LoginUserAsync(User user)
         {
             HashUserSensitiveData(user);
-            var userFromDatabase = await _userRepository.LoginUser(user);
+            var userFromDatabase = await _userRepository.LoginUserAsync(user);
             return userFromDatabase;
         }
 
-        public async Task<string> RegisterUser(User user)
+        public async Task<string> RegisterUserAsync(User user)
         {
             var JWThardcoded = "HARDCODED JWToken";
             HashUserSensitiveData(user);
-            await _userRepository.RegisterUser(user);
+            await _userRepository.RegisterUserAsync(user);
             return JWThardcoded;
         }
 
