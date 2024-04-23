@@ -1,7 +1,6 @@
 ﻿using DoughnutBank.Entities.DBContext;
 using DoughnutBank.Entities;
 using DoughnutBank.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace DoughnutBank.Repositories.Implementations
 {

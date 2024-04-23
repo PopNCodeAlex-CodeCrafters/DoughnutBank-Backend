@@ -2,10 +2,7 @@ using DoughnutBank.Authentication;
 using DoughnutBank.Entities;
 using DoughnutBank.Exceptions;
 using DoughnutBank.Services.Implementations;
-using DoughnutBank.Services.Interfaces;
-using DoughnutBank.Utils;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
 

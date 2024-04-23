@@ -1,6 +1,5 @@
 ﻿using DoughnutBank.Exceptions;
 using DoughnutBank.Services.Interfaces;
-using DoughnutBank.Utils;
 using System.Security.Cryptography;
 namespace DoughnutBank.Services.Implementations
 {

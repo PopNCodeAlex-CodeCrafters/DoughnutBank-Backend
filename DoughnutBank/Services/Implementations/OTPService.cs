@@ -4,7 +4,6 @@ using DoughnutBank.Repositories.Implementations;
 using DoughnutBank.Services.Interfaces;
 using DoughnutBank.Utils;
 using System.Text;
-using static System.Net.WebRequestMethods;
 
 namespace DoughnutBank.Services.Implementations
 {
@@ -12,13 +11,11 @@ namespace DoughnutBank.Services.Implementations
     {
         private readonly IConfiguration _configuration;
         private readonly IOTPGenerator _otpGenerator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly OTPRepository _otpRepository;
-        public OTPService(IOTPGenerator otpGenerator, IConfiguration configuration, IHttpContextAccessor httpContextAccessor,
+        public OTPService(IOTPGenerator otpGenerator, IConfiguration configuration,
             OTPRepository otpRepository) { 
             _otpGenerator = otpGenerator;
             _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
             _otpRepository = otpRepository;
         }
 

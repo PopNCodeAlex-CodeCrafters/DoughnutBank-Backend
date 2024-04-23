@@ -1,6 +1,5 @@
 ﻿
 using DoughnutBank.Exceptions;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace DoughnutBank.Authentication.ApiAccess
 {

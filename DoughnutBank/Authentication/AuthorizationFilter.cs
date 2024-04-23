@@ -1,6 +1,4 @@
-﻿using DoughnutBank.Authentication.ApiAccess;
-using DoughnutBank.Entities;
-using DoughnutBank.Exceptions;
+﻿using DoughnutBank.Entities;
 using DoughnutBank.Repositories.Interfaces;
 using DoughnutBank.Utils;
 using Microsoft.AspNetCore.Mvc;
