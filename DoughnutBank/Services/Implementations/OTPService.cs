@@ -22,21 +22,21 @@ namespace DoughnutBank.Services.Implementations
             _otpRepository = otpRepository;
         }
 
-        public async Task CheckOTP(User user)
+        public async Task CheckOTPAsync(string otp)
         {
             try
             {
-                await _otpRepository.CheckOTPAsync(user.OTP);
+                var otpToSearchFor = new OTP(otp);
+                await _otpRepository.CheckOTPAsync(otpToSearchFor);
             }
             catch (Exception)
             {
                 throw new CustomException("OTP invalid");
             }
         }
-        public async Task<EncryptedOTP> ComputeEncryptedOTPAsync(EncryptedOTP partialOtp)
+        public async Task<EncryptedOTP> ComputeEncryptedOTPAsync(string diffieHellmanPublicKey)
         {
-            string otp = null;
-            otp = _otpGenerator.GenerateOTP();
+            string otp = _otpGenerator.GenerateOTP();
 
             StoreOtpInRepositoryAsync(otp);
 
@@ -47,7 +47,7 @@ namespace DoughnutBank.Services.Implementations
             if (otp == null) throw new CustomException("Null input for encryption");
 
            
-            EncryptedOTP encryptedOTP = EncryptOTPWithDiffieHellmanAndThrow(otp, partialOtp.PublicKey);
+            EncryptedOTP encryptedOTP = EncryptOTPWithDiffieHellmanAndThrow(otp, diffieHellmanPublicKey);
             return encryptedOTP;
             
         }
@@ -56,12 +56,7 @@ namespace DoughnutBank.Services.Implementations
         {
             try
             {
-                var userOfRequest = HttpContextUtils.GetUserFromContext(_httpContextAccessor.HttpContext);
-                var isSuccessful = await _otpRepository.UpdateUserOTPAsync(userOfRequest, new OTP
-                {
-                    UserEmail = userOfRequest.Email,
-                    OTPValue = otp
-                });
+                var isSuccessful = await _otpRepository.UpdateOTPAsync(new OTP(otp));
             }
             catch (Exception ex)
             {
@@ -91,11 +86,10 @@ namespace DoughnutBank.Services.Implementations
         {
             var diffieHellman = new DiffieHellman();
             byte[] encryptedOTP = diffieHellman.Encrypt(Encoding.UTF8.GetBytes(otherPartyPublicKey), otp);
-            return new EncryptedOTP()
+            return new EncryptedOTP(Convert.ToBase64String(encryptedOTP))
             {
                 PublicKey = Convert.ToBase64String(diffieHellman.PublicKey),
-                Iv = Convert.ToBase64String(diffieHellman.IV),
-                OTPValue = Convert.ToBase64String(encryptedOTP)
+                Iv = Convert.ToBase64String(diffieHellman.IV)
             };
         }
 

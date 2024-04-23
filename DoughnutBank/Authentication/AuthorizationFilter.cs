@@ -20,7 +20,7 @@ namespace DoughnutBank.Authentication
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            User userFromRequestHeader = HttpContextUtils.GetUserFromContext(context.HttpContext);
+            User userFromRequestHeader = HttpContextUtils.GetUserFromContext();
             bool validCredentials = await _userRepository.UserExistsAsync(userFromRequestHeader);
 
             if (!validCredentials)

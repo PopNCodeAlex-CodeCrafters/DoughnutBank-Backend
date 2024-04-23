@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using DoughnutBank.Repositories.Interfaces;
 using DoughnutBank.Repositories.Implementations;
 using DoughnutBank.Authentication;
+using DoughnutBank.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "Allow Frontend";
@@ -76,6 +77,8 @@ builder.Services.AddScoped<AuthorizationFilter>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+HttpContextUtils.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

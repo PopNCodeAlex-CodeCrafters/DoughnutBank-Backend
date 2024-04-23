@@ -6,8 +6,16 @@ namespace DoughnutBank.Utils
 {
     public class HttpContextUtils
     {
-        public static User GetUserFromContext(HttpContext context)
+        private static IHttpContextAccessor _httpContextAccessor;
+
+        public static void Configure(IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public static User GetUserFromContext()
+        {
+            var context = _httpContextAccessor.HttpContext;
             if (!context.Request.Headers.TryGetValue(AuthConstants.AuthorizationRequestHeaderName, out var extractedAuthorization))
             {
                 throw new CustomException("No authorization credentials provided", 400);

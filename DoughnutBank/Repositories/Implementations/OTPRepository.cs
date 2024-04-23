@@ -14,36 +14,9 @@ namespace DoughnutBank.Repositories.Implementations
             _context = context;
         }
 
-        public async Task CheckOTPAsync(OTP otp)
+        public async Task<bool> UpdateOTPAsync(OTP otp)
         {
             var existingOtp = _context.OTPs.FirstOrDefault(o => o.UserEmail == otp.UserEmail);
-            if (existingOtp == null) throw new CustomException("No OTP was generated for current user");
-            if (!StringEqualsIgnoringWhitespace(existingOtp.OTPValue, otp.OTPValue)) throw new CustomException("Invalid OTP");
-            if (OTPExpired(existingOtp)) throw new CustomException("OTP Expired");
-
-        }
-        private bool OTPExpired(OTP otp)
-        {
-            long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            return currentTime >= otp.ExpirationTime;
-        }
-
-        private bool StringEqualsIgnoringWhitespace(string str1, string str2)
-        {
-            string trimmedStr1 = RemoveWhitespace(str1);
-            string trimmedStr2 = RemoveWhitespace(str2);
-
-            return trimmedStr1.Equals(trimmedStr2);
-        }
-
-        private string RemoveWhitespace(string input)
-        {
-            return new string(input.Where(c => !char.IsWhiteSpace(c)).ToArray());
-        }
-
-        public async Task<bool> UpdateUserOTPAsync(User user, OTP otp)
-        {
-            var existingOtp = _context.OTPs.FirstOrDefault(o => o.UserEmail == user.Email);
 
             try
             {
@@ -63,10 +36,40 @@ namespace DoughnutBank.Repositories.Implementations
 
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return false;
             }
-           
+
         }
+
+        public async Task CheckOTPAsync(OTP otp)
+        {
+            var existingOtp = _context.OTPs.FirstOrDefault(o => o.UserEmail == otp.UserEmail);
+            if (existingOtp == null) throw new CustomException("No OTP was generated for current user");
+            if (!StringEqualsIgnoringWhitespace(existingOtp.OTPValue, otp.OTPValue)) throw new CustomException("Invalid OTP");
+            if (OTPExpired(existingOtp)) throw new CustomException("OTP Expired");
+
+        }
+       
+        private bool StringEqualsIgnoringWhitespace(string str1, string str2)
+        {
+            string trimmedStr1 = RemoveWhitespace(str1);
+            string trimmedStr2 = RemoveWhitespace(str2);
+
+            return trimmedStr1.Equals(trimmedStr2);
+        }
+
+        private string RemoveWhitespace(string input)
+        {
+            return new string(input.Where(c => !char.IsWhiteSpace(c)).ToArray());
+        }
+
+        private bool OTPExpired(OTP otp)
+        {
+            long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return currentTime >= otp.ExpirationTime;
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using DoughnutBank.Services.Interfaces;
 using DoughnutBank.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 
 namespace DoughnutBank.Controllers
@@ -22,16 +23,23 @@ namespace DoughnutBank.Controllers
             _otpService = otpService;
         }
 
+        //The client was sending and EncryptedOTP object just to send its public key for DiffieHellman encryption
 
         [HttpPost("/OTP")]
-        public async Task<ActionResult<EncryptedOTP>> GetOTPAsync([FromBody] EncryptedOTP partialOtp)
+        public async Task<ActionResult<EncryptedOTP>> GetOTPAsync([FromBody] JsonElement publicKey)
         {
             try
             {
-                var encryptedOtp = await _otpService.ComputeEncryptedOTPAsync(partialOtp);
+                string diffieHellmanPublicKey = publicKey.GetProperty("diffieHellmanPublicKey").ToString();
+                var encryptedOtp = await _otpService.ComputeEncryptedOTPAsync(diffieHellmanPublicKey);
                 return Ok(encryptedOtp);
             }
-            catch(CustomException ex)
+            catch(KeyNotFoundException ex)
+            {
+                return StatusCode(500, "Pass public encryption key in json object with key 'diffieHellmanPublicKey'");
+
+            }
+            catch (CustomException ex)
             {
                 return StatusCode(ex.ErrorCode, ex.Message);
 
@@ -43,12 +51,18 @@ namespace DoughnutBank.Controllers
         }
 
         [HttpPost("/checkOTP")]
-        public async Task<ActionResult> CheckOTPAsync([FromBody] User user)
+        public async Task<ActionResult> CheckOTPAsync([FromBody] JsonElement otp)
         {
             try
             {
-                await _otpService.CheckOTP(user);
+                string otpCode = otp.GetProperty("otpValue").GetString();
+                await _otpService.CheckOTPAsync(otpCode);
                 return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return StatusCode(500, "Pass OTP in json object with key 'otpValue'");
+
             }
             catch (CustomException ex)
             {
