@@ -2,7 +2,7 @@
 
 namespace DoughnutBank.Entities
 {
-    public class OTP
+    public partial class OTP
     {
         public OTP()
         {
@@ -22,6 +22,8 @@ namespace DoughnutBank.Entities
         {
             return ExpirationTimestamp(1);
         }
+
+        //what if we want to have an expiration timestamp of seconds or hours
         private long ExpirationTimestamp(int minutesUntilExpiration)
         {
             long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

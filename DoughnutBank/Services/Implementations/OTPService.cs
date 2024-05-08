@@ -1,4 +1,6 @@
-﻿using DoughnutBank.Entities;
+﻿using DoughnutBank.Commons.ExpirationTimeStamp;
+using DoughnutBank.Entities;
+using DoughnutBank.Entities.EntitiesBuilder;
 using DoughnutBank.Exceptions;
 using DoughnutBank.Repositories.Implementations;
 using DoughnutBank.Services.Interfaces;
@@ -23,7 +25,11 @@ namespace DoughnutBank.Services.Implementations
         {
             try
             {
-                var otpToSearchFor = new OTP(otp);
+                var otpBuilder = new OTPBuilder().OtpValue(otp);
+                var director = new OTPDirector();
+                director.Build1MinuteTimestamp(otpBuilder);
+
+                var otpToSearchFor = otpBuilder.Build();
                 await _otpRepository.CheckOTPAsync(otpToSearchFor);
             }
             catch (Exception)
