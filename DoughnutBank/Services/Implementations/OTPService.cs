@@ -26,8 +26,8 @@ namespace DoughnutBank.Services.Implementations
             try
             {
                 var otpBuilder = new OTPBuilder().OtpValue(otp);
-                var director = new OTPDirector();
-                director.Build1MinuteTimestamp(otpBuilder);
+                var otpDirector = new OTPDirector();
+                otpDirector.Build1MinuteTimestamp(otpBuilder);
 
                 var otpToSearchFor = otpBuilder.Build();
                 await _otpRepository.CheckOTPAsync(otpToSearchFor);
@@ -44,7 +44,12 @@ namespace DoughnutBank.Services.Implementations
             StoreOtpInRepositoryAsync(otp);
 
             if (!ShouldEncryptOTP())
-                return new EncryptedOTP(otp);
+            {
+                var otpBuilder = new EncryptedOTPBuilder().OtpValue(otp);
+                var otpDirector = new OTPDirector();
+                otpDirector.Build1MinuteTimestamp(otpBuilder);
+                return otpBuilder.Build();
+            }
           
 
             if (otp == null) throw new CustomException("Null input for encryption");
@@ -59,7 +64,12 @@ namespace DoughnutBank.Services.Implementations
         {
             try
             {
-                var isSuccessful = await _otpRepository.UpdateOTPAsync(new OTP(otp));
+                var otpBuilder = new OTPBuilder().OtpValue(otp);
+                var otpDirector = new OTPDirector();
+                otpDirector.Build1MinuteTimestamp(otpBuilder);
+                var otpObject = otpBuilder.Build();
+
+                var isSuccessful = await _otpRepository.UpdateOTPAsync(otpObject);
             }
             catch (Exception ex)
             {
@@ -88,12 +98,16 @@ namespace DoughnutBank.Services.Implementations
         private EncryptedOTP EncryptOTPWithDiffieHellman(string otp, string otherPartyPublicKey)
         {
             var diffieHellman = new DiffieHellman();
-            byte[] encryptedOTP = diffieHellman.Encrypt(Encoding.UTF8.GetBytes(otherPartyPublicKey), otp);
-            return new EncryptedOTP(Convert.ToBase64String(encryptedOTP))
-            {
-                PublicKey = Convert.ToBase64String(diffieHellman.PublicKey),
-                Iv = Convert.ToBase64String(diffieHellman.IV)
-            };
+            byte[] encryptedOTPBytes = diffieHellman.Encrypt(Encoding.UTF8.GetBytes(otherPartyPublicKey), otp);
+
+            var publicKey = Convert.ToBase64String(diffieHellman.PublicKey);
+            var iv = Convert.ToBase64String(diffieHellman.IV);
+            string encryptedOTP = Convert.ToBase64String(encryptedOTPBytes);
+
+            var otpBuilder = new EncryptedOTPBuilder().PublicKeyAndIV(publicKey, iv).OtpValue(encryptedOTP);
+            var otpDirector = new OTPDirector();
+            otpDirector.Build1MinuteTimestamp(otpBuilder);
+            return otpBuilder.Build();
         }
 
     }

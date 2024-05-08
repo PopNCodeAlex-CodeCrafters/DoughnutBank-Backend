@@ -1,34 +1,23 @@
-﻿using DoughnutBank.Utils;
+﻿using DoughnutBank.Commons.ExpirationTimeStamp;
+using DoughnutBank.Utils;
 
 namespace DoughnutBank.Entities
 {
     public partial class OTP
     {
-        public OTP()
+        public OTP(string otpValue, TimeStampCreator timeStampCreator, int timestampAvailabilty)
         {
-            ExpirationTime = OneMinuteExpirationTimesStamp();
+            _timeStampCreator = timeStampCreator;
+            ExpirationTime = _timeStampCreator.createTimeStamp(timestampAvailabilty);
             UserEmail = GetUserEmailFromHTTPContext();
-        }
-
-        public OTP(string otpValue) : this()
-        {
             OTPValue = otpValue;
         }
         public string UserEmail { get; set; }
         public string OTPValue { get; set; }
         public long ExpirationTime { get; set; }
 
-        private long OneMinuteExpirationTimesStamp()
-        {
-            return ExpirationTimestamp(1);
-        }
-
-        //what if we want to have an expiration timestamp of seconds or hours
-        private long ExpirationTimestamp(int minutesUntilExpiration)
-        {
-            long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            return currentTime + (minutesUntilExpiration * 60 * 1000);
-        }
+        /// factory method pattern
+        private TimeStampCreator _timeStampCreator;
 
         private string GetUserEmailFromHTTPContext()
         {
